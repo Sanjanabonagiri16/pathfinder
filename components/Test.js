@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import ScoreCard from './ScoreCard';
 import ClientSideMotionButton from './ClientSideMotionButton';
 import useClientSideRender from '../hooks/useClientSideRender';
+import { motion } from 'framer-motion';
 
 function Test({ questions, testName, questionClassName, optionClassName, onTestComplete, timeLimit }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -127,8 +128,11 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Test Results</h2>
         <p className="text-xl mb-6 text-center text-gray-600">Your score: {score} / {questions.length}</p>
         {questions.map((question, index) => (
-          <div 
+          <motion.div 
             key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
             className="mb-8 p-6 bg-white rounded-lg shadow-md"
           >
             <h3 className="text-xl font-semibold mb-4 text-gray-800">{question.question}</h3>
@@ -140,7 +144,7 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
                 <p className="text-blue-800">{question.explanation}</p>
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
         <ClientSideMotionButton
           onClick={() => setShowScoreCard(true)}
@@ -165,30 +169,32 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
         <p className={questionClassName}>{questions[currentQuestion].question}</p>
         <div className="space-y-4 mt-6">
           {questions[currentQuestion].options.map((option, index) => (
-            <button
+            <motion.button
               key={index}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               className={`w-full text-left ${optionClassName} ${answers[currentQuestion] === option ? 'bg-blue-200' : ''} ${attemptedQuestions[currentQuestion] ? 'cursor-not-allowed opacity-50' : ''}`}
               onClick={() => handleAnswer(option)}
               disabled={attemptedQuestions[currentQuestion]}
             >
               {option}
-            </button>
+            </motion.button>
           ))}
         </div>
         <div className="mt-8 flex justify-between">
-          <button
+          <ClientSideMotionButton
             onClick={handleNext}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
             disabled={currentQuestion === questions.length - 1}
           >
             Next
-          </button>
-          <button
+          </ClientSideMotionButton>
+          <ClientSideMotionButton
             onClick={handleSubmit}
             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300"
           >
             Submit
-          </button>
+          </ClientSideMotionButton>
         </div>
       </div>
       <div className="mt-4 flex justify-between items-center">

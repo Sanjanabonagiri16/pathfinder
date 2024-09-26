@@ -12,18 +12,24 @@ const DynamicTest = dynamic(() => import('../components/DynamicTest'), {
 
 export default function TestPage() {
   const questions = [
-    // Your questions array here
+    {
+      question: "What is 2 + 2?",
+      options: ["3", "4", "5", "6"],
+      correctAnswer: "4",
+      explanation: "2 + 2 equals 4 in basic arithmetic."
+    },
+    // Add more questions as needed
   ];
 
   return (
     <ErrorBoundary>
       <DynamicTest
         questions={questions}
-        testName="Your Test Name"
-        questionClassName="your-question-class"
-        optionClassName="your-option-class"
-        onTestComplete={(score, total) => {/* your completion handler */}}
-        timeLimit={3600} // or whatever your time limit is
+        testName="Sample Test"
+        questionClassName="text-lg font-semibold"
+        optionClassName="p-2 border rounded hover:bg-gray-100"
+        onTestComplete={(score, total) => console.log(`Score: ${score}/${total}`)}
+        timeLimit={300}
       />
     </ErrorBoundary>
   );

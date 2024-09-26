@@ -17,24 +17,30 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
   const isClient = useClientSideRender();
 
   useEffect(() => {
-    const storedAttempts = localStorage.getItem(`${testName}_attempts`);
-    if (storedAttempts) {
-      setAttemptsLeft(parseInt(storedAttempts));
+    if (!isClient) return;
+
+    try {
+      const storedAttempts = localStorage.getItem(`${testName}_attempts`);
+      if (storedAttempts) {
+        setAttemptsLeft(parseInt(storedAttempts));
+      }
+
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timer);
+            handleSubmit();
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    } catch (error) {
+      console.error('Error in Test component useEffect:', error);
     }
-
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          handleSubmit();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [testName]);
+  }, [testName, isClient]);
 
   const handleAnswer = (answer) => {
     if (!attemptedQuestions[currentQuestion]) {
@@ -88,7 +94,11 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
   };
 
   if (!isClient) {
-    return null; // or a loading spinner
+    return <div>Loading...</div>;
+  }
+
+  if (!questions || questions.length === 0) {
+    return <div>No questions available.</div>;
   }
 
   if (showSolutions) {

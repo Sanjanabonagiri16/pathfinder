@@ -94,11 +94,31 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
   };
 
   if (!isClient) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
   if (!questions || questions.length === 0) {
-    return <div>No questions available.</div>;
+    return <div className="text-center text-2xl font-bold text-red-500">No questions available.</div>;
+  }
+
+  if (showScoreCard) {
+    return (
+      <ScoreCard
+        score={score}
+        totalQuestions={questions.length}
+        testName={testName}
+        learningPath={generateLearningPath(score, questions.length)}
+      />
+    );
+  }
+
+  if (attemptsLeft <= 0) {
+    return (
+      <div className="max-w-2xl mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">No attempts left</h2>
+        <p className="text-xl mb-6 text-gray-600">You have used all your attempts for this test.</p>
+      </div>
+    );
   }
 
   if (showSolutions) {

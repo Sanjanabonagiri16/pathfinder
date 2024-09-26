@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const DynamicTest = dynamic(() => import('../components/DynamicTest'), {
   ssr: false,
@@ -15,13 +16,15 @@ export default function TestPage() {
   ];
 
   return (
-    <DynamicTest
-      questions={questions}
-      testName="Your Test Name"
-      questionClassName="your-question-class"
-      optionClassName="your-option-class"
-      onTestComplete={(score, total) => {/* your completion handler */}}
-      timeLimit={3600} // or whatever your time limit is
-    />
+    <ErrorBoundary>
+      <DynamicTest
+        questions={questions}
+        testName="Your Test Name"
+        questionClassName="your-question-class"
+        optionClassName="your-option-class"
+        onTestComplete={(score, total) => {/* your completion handler */}}
+        timeLimit={3600} // or whatever your time limit is
+      />
+    </ErrorBoundary>
   );
 }

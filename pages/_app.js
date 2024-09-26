@@ -1,18 +1,10 @@
-import "@/styles/globals.css";
-import "@/styles/animations.css";
-import Layout from '../components/Layout';
-import { AuthProvider } from '../hooks/useAuth';
-import { AnimatePresence } from 'framer-motion';
+import ErrorBoundary from '../components/ErrorBoundary';
 
-function MyApp({ Component, pageProps, router }) {
+function MyApp({ Component, pageProps }) {
   return (
-    <AuthProvider>
-      <Layout>
-        <AnimatePresence mode="wait" initial={false}>
-          <Component {...pageProps} key={router.route} />
-        </AnimatePresence>
-      </Layout>
-    </AuthProvider>
+    <ErrorBoundary>
+      <Component {...pageProps} />
+    </ErrorBoundary>
   );
 }
 

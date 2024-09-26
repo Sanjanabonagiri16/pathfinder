@@ -17,7 +17,6 @@ function Test({ questions, testName, questionClassName, optionClassName, onTestC
   const isClient = useClientSideRender();
 
   useEffect(() => {
-    setIsClient(true);
     const storedAttempts = localStorage.getItem(`${testName}_attempts`);
     if (storedAttempts) {
       setAttemptsLeft(parseInt(storedAttempts));
